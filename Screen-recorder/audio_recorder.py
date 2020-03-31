@@ -2,6 +2,7 @@ import pyaudio
 from prompt_toolkit.shortcuts import radiolist_dialog, input_dialog, message_dialog
 import tempfile
 import wave
+import threading
 
 class AudioRecorder:
     def __init__(self):
@@ -11,8 +12,9 @@ class AudioRecorder:
         self.select_audio_device()
         self.set_recording_info()
 
-    def __call__(self):
+    def record(self):
         self.filename = tempfile.TemporaryFile()
+
         # Begin recording process
         self.start_recording()
         self.stop_recording()
@@ -20,6 +22,12 @@ class AudioRecorder:
         #Save recording output
         self.save_recording()
 
+
+    def __call__(self):
+        audio_thread = threading.Thread(target=self.record)
+        audio_thread.start()
+
+   
     def select_audio_device(self):
         """
         Select Audio Device from list of available microphones. Check based on input channels.
@@ -103,6 +111,8 @@ class AudioRecorder:
             wf.setframerate(self.fs)
             wf.writeframes(b''.join(self.audio_frames))
             wf.close()
+
+    
 
 if __name__ == "__main__":
     audio_recorder = AudioRecorder()
