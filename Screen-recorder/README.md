@@ -18,6 +18,6 @@ python audio_recorder.py
 ## Screen Recorder
 To run the screen recorder, ( If you have multiple screens, records the primary monitor!)
 ```
-python screen_recorder.py
+python screen_grabber.py
 
 ```
