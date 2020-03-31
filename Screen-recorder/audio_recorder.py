@@ -9,7 +9,6 @@ class AudioRecorder:
 
         # Get user input on different parameters
         self.select_audio_device()
-        self.select_recording_time()
         self.set_recording_info()
 
     def __call__(self):
@@ -41,11 +40,6 @@ class AudioRecorder:
         print("Selected Device ID:", self.selected_device)
 
 
-    def select_recording_time(self):
-        self.recording_time = input_dialog(
-            title='Recording Time',
-            text='Enter time you want to record in integer seconds:').run()
-
     def set_recording_info(self):
         """
         Set info for stream recorder
@@ -62,25 +56,34 @@ class AudioRecorder:
                         channels=self.channels,
                         rate=self.fs,
                         frames_per_buffer=self.chunk,
-                input=True, input_device_index=self.selected_device)      
+                input=True, input_device_index=self.selected_device, stream_callback=self.callback_function())      
     
+
+    def callback_function(self):
+        def callback(in_data, frame_count, time_info, status):
+            self.audio_frames.append(in_data)
+            return in_data, pyaudio.paContinue
+        return callback
+
     def start_recording(self):
         """
         Begin recording on dialog accept
         """
+        self.audio_frames = []
         message_dialog(
             title='Start Recording',
             text='Do you want to start recording?\n').run()
 
-        self.audio_frames = []
-        for i in range(0, int(self.fs / self.chunk * int(self.recording_time))):
-            data = self.stream.read(self.chunk)
-            self.audio_frames.append(data)
+        self.stream.start_stream()
+
 
     def stop_recording(self):
         """
         Destroy stream objects
         """
+        message_dialog(
+            title='Recording ..',
+            text='Click OK when you want to stop recording\n').run()
         self.stream.stop_stream()
         self.stream.close()
         self.audio_plugin.terminate()        
@@ -92,12 +95,14 @@ class AudioRecorder:
         self.filename = input_dialog(
             title='Save recording',
             text='Enter filename to save recording, *.wav').run()
-        wf = wave.open("{}.wav".format(self.filename), 'wb')
-        wf.setnchannels(self.channels)
-        wf.setsampwidth(self.audio_plugin.get_sample_size(self.sample_format))
-        wf.setframerate(self.fs)
-        wf.writeframes(b''.join(self.audio_frames))
-        wf.close()
+
+        if self.filename is not None:
+            wf = wave.open("{}.wav".format(self.filename), 'wb')
+            wf.setnchannels(self.channels)
+            wf.setsampwidth(self.audio_plugin.get_sample_size(self.sample_format))
+            wf.setframerate(self.fs)
+            wf.writeframes(b''.join(self.audio_frames))
+            wf.close()
 
 if __name__ == "__main__":
     audio_recorder = AudioRecorder()
