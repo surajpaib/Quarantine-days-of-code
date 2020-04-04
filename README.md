@@ -9,7 +9,7 @@ To keep productive and build fun stuff but in a more structured way
 ## What projects?
 Some ideas: 
 1. [Python based screen recorder, record screen and then maybe use this in automation setting - WIP!](Screen-recorder)
-2. 3D visualizer for CT slices and marked annotations! Interactive 3d visualizer to see lungs, spinal cord etc from DICOM images! 
+2. [3D visualizer for CT slices and marked annotations! Interactive 3d visualizer to see lungs, spinal cord etc from DICOM images!](Ct-visualizer) 
 
 3. Pygame based curve fever, simple and classic version! Maybe integrate some fun AI snakes. 
 4. COVID data fetcher with continuous plotting and summary of important content from across the world. 
