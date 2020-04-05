@@ -2,3 +2,9 @@
 *.wav
 
 *.mp4
+
+Ct-visualizer/__pycache__/
+
+Ct-visualizer/LUNG1-001/LUNG1-001_20190225_CT/scans/0-unknown/resources/DICOM/files/
+
+Ct-visualizer/LUNG1-001/
